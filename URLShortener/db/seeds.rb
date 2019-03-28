@@ -17,7 +17,7 @@ end
 
 urls = []
 users.each do |user|
-  urls << ShortenedUrl.create!(user, Faker::String.random)
+  urls << ShortenedUrl.create!(user, Faker::Internet.url)
 end
 
 users.reverse_each do |user|

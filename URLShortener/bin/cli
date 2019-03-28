@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
-require 'launchy/rails'
+require 'launchy'
 
 puts "Enter your email >"
 user_email = gets.chomp
 
 user = User.find_by(email: user_email)
-
+user = User.create(email: user_email) if user.nil?
 puts "Do you want to"
 puts "1) visit a shortened url"
 puts "2) create a shortened url"
@@ -14,8 +14,9 @@ choice = gets.chomp
 if choice == "1"
   puts "Enter the url you want to visit"
   url_visit = gets.chomp
-  Launchy.open(url_visit)
-  Visit.record_visit!(user, url_visit)
+  shortened_url = ShortenedUrl.find_by(short_url: url_visit)
+  Launchy::Browser.new.visit(shortened_url.long_url)
+  Visit.record_visit!(user, shortened_url)
 else
   puts "Enter a url to shorten"
   long_url = gets.chomp
